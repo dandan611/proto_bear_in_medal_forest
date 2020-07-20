@@ -10,7 +10,7 @@ def prepareGame(field, medalBox, hand, bearPosition):
 
     # 手配とメダルデッキの設定
     for number in range(len(stage1Medals)):
-        if len(hand) < 4 :
+        if len(hand) <= 5 :
             hand.append(stage1Medals.popleft())
         else :
             medalBox.append(stage1Medals.popleft())
@@ -79,7 +79,6 @@ def selectDropMedal():
     return selectMedal, selectLane
 
 def dropMedal(field,hand,selectMedal,selectLane):
-    dropMedals = []
     dropMedal = hand.pop(selectMedal-1)
     print("{}レーンに{}メダルが落下します。".format(selectLane,dropMedal))
 
@@ -88,29 +87,37 @@ def dropMedal(field,hand,selectMedal,selectLane):
     for column in field:
         lene.append(column[selectLane-1])
 
-    # 落下メダルに応じてレーンをずらす
-    for moveCount in range(dropMedal):
-        emptyPoint = searchLeneIndex(lene[1+moveCount:],10)
-        print(lene,emptyPoint)
+    # ゴールをのぞく
+    lene = lene[1:]
 
-        # レーンのいずれの位置も空いていない場合
-        if emptyPoint == -1 :
-            # 最後の位置のメダルを落とし、最後-1からずらしていく,1+moveCountの位置を空ける
-            dropMedals.append(lene[-1])
-            for index in range(len(lene)-1,1+moveCount,-1):
-                lene[index] = lene[index-1]
-            lene[1+moveCount] = 10
-                    
-        # レーン位置で空いている場所がある場合
-        else :
-            # 最初から空いている位置までずらしていく
-            for index in range(emptyPoint+1,1+moveCount,-1):
-                lene[index] = lene[index-1]
-            lene[1+moveCount] = 10
+    # 移動分の距離を作成
+    moveLene = [10 for i in range(dropMedal)]
+    # print("movelene",moveLene)
+
+    # 落下メダルに応じてレーンを詰める
+    for moveCount in range(dropMedal):
+        if searchLeneIndex(lene,10) != -1:
+            lene.remove(10)
+
+    #print("lene",lene)
+
+    for cell in lene:
+        moveLene.append(cell)
+    # print("movedlene",moveLene)
+
+    lene = moveLene[:5]
+
+    dropMedals = []
+    for cell in reversed(moveLene[5:]):
+        if cell != 10:
+            dropMedals.append(cell)
+
+    # 先頭にゴールをつける
+    lene.insert(0, 10)
 
     #ずれた個所に落下メダル配置
-    lene[dropMedal ] += dropMedal
-    print(lene,dropMedals)
+    lene[dropMedal] += dropMedal
+    # print(lene,dropMedals)
 
     #レーン情報を更新
     for index in range(len(lene)):

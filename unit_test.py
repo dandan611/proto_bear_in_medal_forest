@@ -4,7 +4,7 @@ from collections import deque
 
 def testPrepareGame(field, medalBox, hand, bearPosition):
     stage1Medals = deque([1,2,3,4,5])
-    stage1FieldMedals = deque([[1,1,2],[2,1,2],[3,1,3],[4,1,4],[5,1,5],[3,2,2]])
+    stage1FieldMedals = deque([[1,1,2],[2,1,2],[3,1,3],[5,1,5],[3,2,2]])
     # deque([[1,1,2],[2,1,2],[3,1,3],[4,1,4],[5,1,5],[3,2,2]])
     stage1FieldBear = [3,2]
 
@@ -62,6 +62,12 @@ if __name__ == "__main__":
 
         # メダル落下のターン
         field, hand,dropMedals = game_rule.dropMedal(field,hand,selectMedal,selectLane)
+
+        print("落下したもの:",dropMedals)
+        # クマが落ちてしまった場合はゲームオーバー(game_rule.judgeGameに入れたほうがいいかも)
+        if len(dropMedals) > 0 and max(dropMedals) > 90 :
+            gameStatus = 2
+            break
 
         # 勝敗判定
         gameStatus = game_rule.judgeGame(field,hand)

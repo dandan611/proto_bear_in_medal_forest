@@ -1,0 +1,1 @@
+# proto_bear_in_medal_forest

@@ -43,9 +43,8 @@ if __name__ == "__main__":
             gameStatus = 2
             break
 
-
         # クマ移動のターン
-        field = game_rule.moveBear(field)
+        field, bearPosition = game_rule.moveBear(field)
 
         # 勝敗判定
         gameStatus = game_rule.judgeGame(field,hand)

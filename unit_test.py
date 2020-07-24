@@ -62,12 +62,15 @@ if __name__ == "__main__":
 
         # メダル落下のターン
         field, hand,dropMedals = game_rule.dropMedal(field,hand,selectMedal,selectLane)
-
         print("落下したもの:",dropMedals)
+
         # クマが落ちてしまった場合はゲームオーバー(game_rule.judgeGameに入れたほうがいいかも)
         if len(dropMedals) > 0 and max(dropMedals) > 90 :
             gameStatus = 2
             break
+
+        # クマ移動のターン
+        field, bearPosition = game_rule.moveBear(field)
 
         # 勝敗判定
         gameStatus = game_rule.judgeGame(field,hand)

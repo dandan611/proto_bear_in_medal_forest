@@ -92,18 +92,14 @@ def dropMedal(field,hand,selectMedal,selectLane):
 
     # 移動分の距離を作成
     moveLene = [10 for i in range(dropMedal)]
-    # print("movelene",moveLene)
 
     # 落下メダルに応じてレーンを詰める
     for moveCount in range(dropMedal):
         if searchLeneIndex(lene,10) != -1:
             lene.remove(10)
 
-    #print("lene",lene)
-
     for cell in lene:
         moveLene.append(cell)
-    # print("movedlene",moveLene)
 
     lene = moveLene[:5]
 
@@ -117,7 +113,6 @@ def dropMedal(field,hand,selectMedal,selectLane):
 
     #ずれた個所に落下メダル配置
     lene[dropMedal] += dropMedal
-    # print(lene,dropMedals)
 
     #レーン情報を更新
     for index in range(len(lene)):
@@ -125,12 +120,48 @@ def dropMedal(field,hand,selectMedal,selectLane):
 
     return field, hand, dropMedals
 
-# TBD
 def moveBear(field):
     print("[クマのターンです]")
-    print("X,Xに移動しました")
+
+    # 川フィールドからクマの座標を取得
+    bearPosition = getBearPosition(field)
+    print("{},{}にいます".format(bearPosition[0],bearPosition[1]+1))
+
+    # クマの乗っているメダルの番号を取得
+    bearMedal = field[bearPosition[0]][bearPosition[1]]-90
+    print("クマが乗っているメダル:",bearMedal)
+
+    # 前方に移動できるか
+    # bearPosition[0]-1 が 1行目(0以下)じゃない かつ　その先のメダルが、bearMedalの±1
+    if bearPosition[0]-1 > 0 and abs((field[bearPosition[0]-1][bearPosition[1]]-10) - bearMedal) == 1:
+        # 川フィールドとクマの座標を更新する
+        field[bearPosition[0]][bearPosition[1]] -= 80
+        bearPosition[0] -= 1
+        field[bearPosition[0]][bearPosition[1]] += 80
+        print("{},{}に移動しました".format(bearPosition[0],bearPosition[1]+1))
+        print("--------------------------------------")
+        return field, bearPosition
+
+    # 右に移動できるか
+    # bearPosition[1]+1 が 5列目(5以上)じゃない かつ　その先のメダルが、bearMedalの±1
+    if bearPosition[1]+1 < 5 and abs((field[bearPosition[0]][bearPosition[1]+1]-10) - bearMedal) == 1:
+        # 川フィールドとクマの座標を更新する
+        field[bearPosition[0]][bearPosition[1]] -= 80
+        bearPosition[1] += 1
+        field[bearPosition[0]][bearPosition[1]] += 80
+        print("{},{}に移動しました".format(bearPosition[0],bearPosition[1]+1))
+        print("--------------------------------------")
+        return field, bearPosition
+
+    # 左に移動できるか
+    # bearPosition[1]-1 が 1列目じゃない(0以下) かつ　その先のメダルが、bearMedalの±1
+    # クマの位置を更新する
+    # 川フィールドを更新する
+
+    print("{},{}に留まり、移動しませんでした".format(bearPosition[0],bearPosition[1]+1))
     print("--------------------------------------")
-    return field
+
+    return field, bearPosition
 
 def judgeGame(field,hand):
     if len(hand) == 0:
@@ -159,3 +190,11 @@ def searchLeneIndex(lene, element, default=False):
         return lene.index(element)
     else:
         return -1
+
+def getBearPosition(field):
+    for column in range(len(field)):
+        for row in range(len(field[0])):
+            if field[column][row] > 90:
+                return [column,row]
+
+    return [-1,-1]

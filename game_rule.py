@@ -3,14 +3,16 @@ import io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 from collections import deque
 
-def prepareGame(field, medalBox, hand, bearPosition):
+def prepareGame(field, bearPosition):
     stage1Medals = deque([1,2])
     stage1FieldMedals = deque([[2,1,3],[3,2,2],[2,3,1]])
     stage1FieldBear = [3,2]
 
     # 手配とメダルデッキの設定
+    hand = []
+    medalBox = []   
     for number in range(len(stage1Medals)):
-        if len(hand) <= 5 :
+        if len(hand) < 5 :
             hand.append(stage1Medals.popleft())
         else :
             medalBox.append(stage1Medals.popleft())
@@ -34,6 +36,11 @@ def displayStatus(turn,medalBox,hand,field,bearPosition):
     # ステータス表示
     print("ターン:{}".format(turn))
     print("残りメダル:{}".format(len(medalBox)+len(hand)))
+    print()
+
+    # メダルデッキ表示
+    print("メダルデッキ")
+    print(medalBox)
     print()
 
     # ハンド表示
@@ -187,9 +194,12 @@ def judgeGame(field,hand):
 
     return 0
 
-# TBD
-def refillMedal(hand):
-    return hand
+def refillMedal(hand, medalBox):
+    if len(hand) < 5 and len(medalBox) != 0:
+        hand.append(medalBox[0])
+        medalBox = medalBox[1:]
+
+    return hand, medalBox
 
 def searchLeneIndex(lene, element, default=False):
     if element in lene:

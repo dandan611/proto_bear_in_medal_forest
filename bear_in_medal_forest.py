@@ -23,7 +23,7 @@ if __name__ == "__main__":
     medalBox = []
 
     # ゲームの準備
-    field, medalBox, hand, bearPosition = game_rule.prepareGame(field, medalBox, hand,bearPosition)
+    field, medalBox, hand, bearPosition = game_rule.prepareGame(field, bearPosition)
 
     while(True):        
         time.sleep(1)
@@ -52,7 +52,7 @@ if __name__ == "__main__":
             break
 
         # ハンドのメダルを補充する
-        hand = game_rule.refillMedal(hand)
+        hand, medalBox = game_rule.refillMedal(hand, medalBox)
 
         # ターンを進める
         turn += 1

@@ -2,15 +2,17 @@ import time
 import game_rule
 from collections import deque
 
-def testPrepareGame(field, medalBox, hand, bearPosition):
-    stage1Medals = deque([1,2,3,4,5])
+def testPrepareGame(field, bearPosition):
+    stage1Medals = deque([1,2,3,4,5,2])
     stage1FieldMedals = deque([[1,1,2],[2,1,2],[3,1,3],[5,1,5],[3,2,2]])
     # deque([[1,1,2],[2,1,2],[3,1,3],[4,1,4],[5,1,5],[3,2,2]])
     stage1FieldBear = [3,2]
 
     # 手配とメダルデッキの設定
+    hand = []
+    medalBox = []   
     for number in range(len(stage1Medals)):
-        if len(hand) <= 5 :
+        if len(hand) < 5 :
             hand.append(stage1Medals.popleft())
         else :
             medalBox.append(stage1Medals.popleft())
@@ -48,7 +50,7 @@ if __name__ == "__main__":
     medalBox = []
 
     # ゲームの準備
-    field, medalBox, hand, bearPosition = testPrepareGame(field, medalBox, hand,bearPosition)
+    field, medalBox, hand, bearPosition = testPrepareGame(field ,bearPosition)
 
     while(True):        
         time.sleep(1)
@@ -78,7 +80,7 @@ if __name__ == "__main__":
             break
 
         # ハンドのメダルを補充する
-        hand = game_rule.refillMedal(hand)
+        hand, medalBox = game_rule.refillMedal(hand, medalBox)
 
         # ターンを進める
         turn += 1

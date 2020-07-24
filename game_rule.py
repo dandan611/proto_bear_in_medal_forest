@@ -5,7 +5,7 @@ from collections import deque
 
 def prepareGame(field, bearPosition):
     stage1Medals = deque([1,2])
-    stage1FieldMedals = deque([[2,1,3],[3,2,2],[2,3,1]])
+    stage1FieldMedals = deque([[2,1,3],[3,2,3],[2,3,1]])
     stage1FieldBear = [3,2]
 
     # 手配とメダルデッキの設定

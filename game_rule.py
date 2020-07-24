@@ -129,10 +129,10 @@ def moveBear(field):
 
     # クマの乗っているメダルの番号を取得
     bearMedal = field[bearPosition[0]][bearPosition[1]]-90
-    print("クマが乗っているメダル:",bearMedal)
+    # print("クマが乗っているメダル:",bearMedal)
 
     # 前方に移動できるか
-    # bearPosition[0]-1 が 1行目(0以下)じゃない かつ　その先のメダルが、bearMedalの±1
+    # bearPosition[0]-1 が 1行目(0以上)じゃない かつ　その先のメダルが、bearMedalの±1
     if bearPosition[0]-1 > 0 and abs((field[bearPosition[0]-1][bearPosition[1]]-10) - bearMedal) == 1:
         # 川フィールドとクマの座標を更新する
         field[bearPosition[0]][bearPosition[1]] -= 80
@@ -143,8 +143,8 @@ def moveBear(field):
         return field, bearPosition
 
     # 右に移動できるか
-    # bearPosition[1]+1 が 5列目(5以上)じゃない かつ　その先のメダルが、bearMedalの±1
-    if bearPosition[1]+1 < 5 and abs((field[bearPosition[0]][bearPosition[1]+1]-10) - bearMedal) == 1:
+    # bearPosition[1]+1 が 5列目(5以上)じゃない かつ　その先のメダルが、bearMedalの±1 かつ　メダルがある
+    if bearPosition[1]+1 < 5 and abs((field[bearPosition[0]][bearPosition[1]+1]-10) - bearMedal) == 1 and field[bearPosition[0]][bearPosition[1]+1] != 10:
         # 川フィールドとクマの座標を更新する
         field[bearPosition[0]][bearPosition[1]] -= 80
         bearPosition[1] += 1
@@ -154,9 +154,15 @@ def moveBear(field):
         return field, bearPosition
 
     # 左に移動できるか
-    # bearPosition[1]-1 が 1列目じゃない(0以下) かつ　その先のメダルが、bearMedalの±1
-    # クマの位置を更新する
-    # 川フィールドを更新する
+    # bearPosition[1]-1 が 1列目じゃない(0以下) かつ　その先のメダルが、bearMedalの±1 かつ　メダルがある
+    if bearPosition[1]-1 > -1 and abs((field[bearPosition[0]][bearPosition[1]-1]-10) - bearMedal) == 1 and field[bearPosition[0]][bearPosition[1]-1] != 10:
+        # 川フィールドとクマの座標を更新する
+        field[bearPosition[0]][bearPosition[1]] -= 80
+        bearPosition[1] -= 1
+        field[bearPosition[0]][bearPosition[1]] += 80
+        print("{},{}に移動しました".format(bearPosition[0],bearPosition[1]+1))
+        print("--------------------------------------")
+        return field, bearPosition
 
     print("{},{}に留まり、移動しませんでした".format(bearPosition[0],bearPosition[1]+1))
     print("--------------------------------------")

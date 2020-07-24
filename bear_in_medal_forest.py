@@ -58,10 +58,15 @@ if __name__ == "__main__":
         turn += 1
         print()
 
+# ゲーム終了時の情報
+game_rule.displayStatus(turn,medalBox,hand,field,bearPosition)
+
 if gameStatus == 1:
     print("ゲームクリアです")
 else :
     if gameStatus == 3:
+        print("残りメダル数:",len(hand)+len(medalBox))
         print("メダルがなくなってしまったため、ゲームオーバーです")
     else :
+        print("落ちたもの：",dropMedals)
         print("クマが滝に落ちてしまったので、ゲームオーバーです")

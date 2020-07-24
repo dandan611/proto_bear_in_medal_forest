@@ -47,7 +47,7 @@ if __name__ == "__main__":
         field, bearPosition = game_rule.moveBear(field)
 
         # 勝敗判定
-        gameStatus = game_rule.judgeGame(field,hand)
+        gameStatus = game_rule.judgeGame(field, hand, bearPosition)
         if gameStatus != 0 :
             break
 
@@ -61,7 +61,7 @@ if __name__ == "__main__":
 if gameStatus == 1:
     print("ゲームクリアです")
 else :
-    if len(hand) == 0:
+    if gameStatus == 3:
         print("メダルがなくなってしまったため、ゲームオーバーです")
     else :
         print("クマが滝に落ちてしまったので、ゲームオーバーです")

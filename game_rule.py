@@ -2,6 +2,7 @@ import sys
 import io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 from collections import deque
+import copy
 
 def prepareGame(field, bearPosition):
     stage1Medals = deque([1,2])
@@ -176,23 +177,22 @@ def moveBear(field):
 
     return field, bearPosition
 
-def judgeGame(field,hand):
+def judgeGame(field, hand, bearPosition):
+    # クマがゴールに到達している(ステージクリア)
+    if isExploreGoal(field, bearPosition) :
+        return 1
+
+    # 置けるメダルがもうない(ゲームオーバー)
     if len(hand) == 0:
-        return 2
+        return 3
 
-    for i in range(5):
-        if field[0][i] == 90 :
-            return 1
-
+    # フィールドにクマがいる(ゲーム続行)
     for column in field:
         for row in column : 
             if row > 90 :
                 return 0
 
-    if len(hand) == 0:
-        return 2
-
-    return 0
+    return 2
 
 def refillMedal(hand, medalBox):
     if len(hand) < 5 and len(medalBox) != 0:
@@ -214,3 +214,57 @@ def getBearPosition(field):
                 return [column,row]
 
     return [-1,-1]
+
+def isExploreGoal(field, bearPosition):
+    # 探索方向(下、右、上、左)をセット
+    direct = [[1, 0], [0, 1], [-1, 0], [0, -1]]
+    
+    # 探索マップ
+    exploreField = copy.deepcopy(field) 
+
+    # 探索リストにスタート位置をセット
+    exploreList = [[bearPosition[0],bearPosition[1] , field[bearPosition[0]][bearPosition[1]]-90]]
+    exploreField[bearPosition[0]][bearPosition[1]] -= 80
+
+    # 探索スタート
+    while len(exploreList) > 0:
+        """
+        # for debug 
+        print("探索リスト",exploreList)
+        print("探索マップ---")
+        for row in range(len(exploreField)):
+            print(field[row])
+            if row == 0:
+                print("------------------------------------")
+        """
+
+        x, y, currentMedal = exploreList. pop(0)
+        
+        # 探索済みとしてセット
+        exploreField[x][y] += 50 
+
+        # ゴール
+        if x == 1:
+            return True
+
+        # 幅優先探索
+        # 川フィールド内　かつ 探索済みでない　かつ メダル番号が±1
+        # もし、奥行が1のゴール確定の位置だった場合、Trueを返す　
+        # そうでなければ、探索リストに追加
+        for d in direct:
+            dx = d[0]
+            dy = d[1]
+            if 1 < x+dx  and x+dx < 5  and  -1 < y+dy and y+dy < 5:
+                if exploreField[x+dx][y+dy] < 50 and abs((exploreField[x+dx][y+dy]-10) - currentMedal) == 1:
+                    exploreList.append([x+dx,y+dy,exploreField[x+dx][y+dy]-10])
+    """
+    print("探索リスト",exploreList)
+    print("探索マップ---")
+    for row in range(len(exploreField)):
+        print(field[row])
+        if row == 0:
+            print("------------------------------------")
+    """
+
+    return False
+

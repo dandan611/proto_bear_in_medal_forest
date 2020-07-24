@@ -27,7 +27,6 @@ def testPrepareGame(field, bearPosition):
 
     return field, medalBox, hand, bearPosition
 
-
 if __name__ == "__main__":
 
     # ゲームの準備
@@ -75,7 +74,7 @@ if __name__ == "__main__":
         field, bearPosition = game_rule.moveBear(field)
 
         # 勝敗判定
-        gameStatus = game_rule.judgeGame(field,hand)
+        gameStatus = game_rule.judgeGame(field, hand, bearPosition)
         if gameStatus != 0 :
             break
 
@@ -86,11 +85,16 @@ if __name__ == "__main__":
         turn += 1
         print()
 
+# ゲーム終了時の情報
+game_rule.displayStatus(turn,medalBox,hand,field,bearPosition)
+
 if gameStatus == 1:
     print("ゲームクリアです")
 else :
-    if len(hand) == 0:
+    if gameStatus == 3:
+        print("残りメダル数:",len(hand)+len(medalBox))
         print("メダルがなくなってしまったため、ゲームオーバーです")
     else :
+        print("落ちたもの：",dropMedals)
         print("クマが滝に落ちてしまったので、ゲームオーバーです")
 
